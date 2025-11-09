@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Birthday, My Sweet Love</title>
+<style>
+  :root{
+    --red:#7a0b0b;
+    --gold:#d4af37;
+    --bg-dark:linear-gradient(180deg,#2b0000 0%, #3d0000 100%);
+    --text: #fff8f0;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  html,body{height:100%;margin:0;background:#0b0202;display:flex;align-items:center;justify-content:center;}
+  .card{width:min(860px,96vw);height:min(720px,92vh);border-radius:18px;overflow:hidden;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.6);background:radial-gradient(ellipse at top left, rgba(212,175,55,0.06), transparent 30%),var(--bg-dark);border:1px solid rgba(212,175,55,0.08);display:flex;flex-direction:column;}
+  .overlay {position:absolute;inset:0;pointer-events:none;}
+  /* sparkle layer */
+  .sparkles{position:absolute;inset:0;background:radial-gradient(circle at 10% 20%, rgba(212,175,55,0.12), transparent 8%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.03), transparent 12%);mix-blend-mode:screen;opacity:0;transition:opacity .8s;}
+  .sparkles.active{opacity:1;}
+  /* hearts layer */
+  .hearts{position:absolute;inset:0;pointer-events:none;opacity:0;}
+  .hearts.active{opacity:1;transition:opacity .8s;}
+  .heart{position:absolute;width:28px;height:28px;background:transparent;transform:translateY(0) rotate(45deg);}
+  .heart:before,.heart:after{content:"";position:absolute;width:28px;height:28px;background:rgba(255,255,255,0.06);border-radius:50%;}
+  .heart:before{top:-14px;left:0;background:linear-gradient(180deg,rgba(255,255,255,0.06),rgba(212,175,55,0.06));}
+  .heart:after{left:14px;top:0;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(212,175,55,0.02));}
+  /* sunset */
+  .sunset{position:absolute;inset:0;opacity:0;background:linear-gradient(180deg, rgba(255,187,102,0.05), rgba(122,11,11,0.25));mix-blend-mode:screen;transition:opacity .8s;}
+  .sunset.active{opacity:1;}
+  /* content */
+  .content{position:relative;z-index:4;padding:44px;color:var(--text);display:flex;flex-direction:column;gap:18px;}
+  h1{margin:0;font-size:28px;letter-spacing:0.4px;color:var(--gold);text-shadow:0 2px 10px rgba(0,0,0,0.6);}
+  .subtitle{font-size:14px;color:rgba(255,255,255,0.8);}
+  .card-inner{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:26px;border-radius:12px;border:1px solid rgba(212,175,55,0.06);box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);flex:1;display:flex;flex-direction:column;justify-content:center;}
+  .paragraph{opacity:0;transform:translateY(10px);transition:all .9s cubic-bezier(.2,.9,.2,1);line-height:1.6;color:#fff9f6;font-size:18px;}
+  .paragraph.visible{opacity:1;transform:none;}
+  .small{font-size:14px;color:rgba(255,255,255,0.76);margin-top:12px}
+  .controls{display:flex;gap:12px;align-items:center;margin-top:18px}
+  .btn{background:var(--gold);color:#3b0707;padding:10px 18px;border-radius:10px;border:none;font-weight:700;cursor:pointer;box-shadow:0 6px 18px rgba(212,175,55,0.14);}
+  .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.9);font-weight:600;}
+  .footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px}
+  .credit{font-size:13px;color:rgba(255,255,255,0.6)}
+  /* click-to-play overlay */
+  .play-overlay{position:absolute;inset:0;background:linear-gradient(90deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));display:flex;align-items:center;justify-content:center;z-index:6;flex-direction:column;gap:12px;color:white;text-align:center;padding:20px;}
+  .play-overlay .circle{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);backdrop-filter:blur(4px);box-shadow:0 6px 20px rgba(0,0,0,0.6);}
+  .play-overlay .circle:after{content:'►';font-size:34px;color:var(--gold);}
+  .hidden{display:none!important;}
+  @media (max-width:600px){h1{font-size:20px}.paragraph{font-size:16px;padding:0 6px}}
+</style>
+</head>
+<body>
+<div class="card" id="card">
+  <div class="overlay">
+    <div class="sparkles" id="sparkles"></div>
+    <div class="hearts" id="hearts"></div>
+    <div class="sunset" id="sunset"></div>
+  </div>
+  <div class="content">
+    <div>
+      <h1>Happy Birthday, My Sweet Love</h1>
+      <div class="subtitle">A letter from Felipe — piano & soft animation</div>
+    </div>
+    <div class="card-inner" id="cardInner">
+      <!-- paragraphs will be injected -->
+      <p class="paragraph" id="p0"><strong>I decided to write you a letter</strong> since you didn’t let me send you any gifts!! But next year you’ll be with me, and I’ll try to give you the best birthday of your life 😏😘</p>
+      <p class="paragraph" id="p1"><strong>Today is your birthday,</strong> but the one who truly got the gift on November 10th, 1993, was me — because from the day you were born, you were destined to find me somewhere along life’s path. And this year, it finally happened.</p>
+      <p class="paragraph" id="p2"><strong>I’m so happy to celebrate this special day with you,</strong> because it’s the day my sweet love came into the world — the day that gave my life meaning. We’ll have many more of your birthdays to celebrate together, and even though I can’t be with you in person today, I’ll always be there in your heart — today and every day.</p>
+      <p class="paragraph" id="p3"><strong>Once again, happy birthday, my baby 💙</strong><br>Enjoy your day — I love you so much!<br>Today is your birthday, but I’m the one who truly got the greatest gift when I met you. 💙</p>
+      <div class="small">Click the button below when you're ready to reveal the final message in Polish.</div>
+      <div class="controls">
+        <button class="btn" id="revealBtn">Reveal next</button>
+        <button class="btn secondary" id="replayBtn">Play again</button>
+      </div>
+      <div class="footer">
+        <div class="credit">With love, your hubby, Felipe 😘💙</div>
+        <div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="play-overlay" id="playOverlay">
+    <div class="circle"></div>
+    <div>Tap to play the music & begin</div>
+  </div>
+</div>
+
+<!-- final Polish closing hidden initially -->
+<div id="finalButton" style="display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:30px;z-index:9">
+  <button class="btn" id="finalBtn">„Kocham Cię bardzo, moje słoneczko. Nie mogę się doczekać, aż będziemy mogli razem świętować Twoje kolejne urodziny. Twój hubby, Felipe 💙”</button>
+</div>
+
+<script>
+// basic heart generator
+function makeHearts() {
+  const container = document.getElementById('hearts');
+  const count = 12;
+  for(let i=0;i<count;i++){
+    const el = document.createElement('div');
+    el.className = 'heart';
+    el.style.left = (5 + Math.random()*90)+'%';
+    el.style.top = (20 + Math.random()*60)+'%';
+    el.style.transform += ' scale('+ (0.8 + Math.random()*1.2) +')';
+    el.style.opacity = 0.02 + Math.random()*0.9;
+    el.style.transition = 'transform 8s linear, opacity 3s';
+    container.appendChild(el);
+  }
+}
+
+// paragraph reveal logic
+const paragraphs = Array.from(document.querySelectorAll('.paragraph'));
+let idx = 0;
+const revealBtn = document.getElementById('revealBtn');
+const replayBtn = document.getElementById('replayBtn');
+const sparkles = document.getElementById('sparkles');
+const hearts = document.getElementById('hearts');
+const sunset = document.getElementById('sunset');
+const finalButton = document.getElementById('finalButton');
+
+function revealNext(){
+  if(idx < paragraphs.length){
+    paragraphs[idx].classList.add('visible');
+    // trigger background stages
+    if(idx === 0){ sparkles.classList.add('active'); hearts.classList.remove('active'); sunset.classList.remove('active'); }
+    if(idx === 1){ hearts.classList.add('active'); sparkles.classList.remove('active'); }
+    if(idx === 2){ /* keep hearts */ }
+    if(idx === 3){ sunset.classList.add('active'); hearts.classList.remove('active'); finalButton.style.display='block'; }
+    idx++;
+    if(idx >= paragraphs.length) revealBtn.textContent = 'Reveal final message';
+  } else {
+    // show final message button (already revealed)
+    finalButton.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+}
+
+// simple WebAudio melody (soft, romantic feel)
+let audioCtx, masterGain;
+function startAudio() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  masterGain = audioCtx.createGain();
+  masterGain.gain.value = 0.12;
+  masterGain.connect(audioCtx.destination);
+
+  // a gentle arpeggio loop using sine + lowpass to emulate soft key
+  const notes = [440, 523.25, 659.25, 587.33]; // A4, C5, E5, D5
+  let t = audioCtx.currentTime;
+  notes.forEach((n,i)=>{
+    const osc = audioCtx.createOscillator();
+    const env = audioCtx.createGain();
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 1200;
+    osc.type = 'sine';
+    osc.frequency.value = n;
+    osc.connect(filter);
+    filter.connect(env);
+    env.connect(masterGain);
+    const start = t + i*0.28;
+    const dur = 1.2;
+    osc.start(start);
+    env.gain.setValueAtTime(0,start);
+    env.gain.linearRampToValueAtTime(1,start+0.06);
+    env.gain.exponentialRampToValueAtTime(0.0001,start+dur);
+    osc.stop(start+dur+0.1);
+  });
+  // loop the melody every 3 seconds
+  setInterval(()=>{
+    const t2 = audioCtx.currentTime + 0.05;
+    notes.forEach((n,i)=>{
+      const osc = audioCtx.createOscillator();
+      const env = audioCtx.createGain();
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 1200;
+      osc.type = 'sine';
+      osc.frequency.value = n;
+      osc.connect(filter);
+      filter.connect(env);
+      env.connect(masterGain);
+      const start = t2 + i*0.28;
+      const dur = 1.2;
+      osc.start(start);
+      env.gain.setValueAtTime(0,start);
+      env.gain.linearRampToValueAtTime(1,start+0.06);
+      env.gain.exponentialRampToValueAtTime(0.0001,start+dur);
+      osc.stop(start+dur+0.1);
+    });
+  },3000);
+}
+
+document.getElementById('playOverlay').addEventListener('click',()=>{
+  document.getElementById('playOverlay').classList.add('hidden');
+  if(!audioCtx) startAudio();
+  // start first reveal gently
+  setTimeout(()=>{ revealNext(); }, 350);
+});
+
+revealBtn.addEventListener('click', ()=>{
+  revealNext();
+});
+
+replayBtn.addEventListener('click', ()=>{
+  // reset
+  idx = 0;
+  paragraphs.forEach(p=>p.classList.remove('visible'));
+  sparkles.classList.remove('active');
+  hearts.classList.remove('active');
+  sunset.classList.remove('active');
+  finalButton.style.display='none';
+  // restart audio briefly
+  if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  if(!audioCtx) startAudio();
+});
+
+// final button action: show a gentle confetti effect and a short chime
+document.getElementById('finalBtn').addEventListener('click', ()=>{
+  // chime using same synth
+  if(!audioCtx) startAudio();
+  // small visual pulse
+  const b = document.getElementById('finalBtn');
+  b.animate([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:700});
+  // small confetti (simple colored circles)
+  for(let i=0;i<30;i++){
+    const c = document.createElement('div');
+    c.style.position='fixed';
+    c.style.left = (50 + (Math.random()*40-20)) + '%';
+    c.style.bottom = '100px';
+    c.style.width = '8px';
+    c.style.height = '8px';
+    c.style.borderRadius='50%';
+    c.style.background = ['#ffd1a9','#ffd6e0','#ffd1b8','#ffd6f0','#fff2b8'][Math.floor(Math.random()*5)];
+    c.style.zIndex=999;
+    document.body.appendChild(c);
+    const vy = - (400 + Math.random()*300);
+    c.animate([{transform:'translateY(0) rotate(0deg)', opacity:1},{transform:'translateY('+vy+'px) rotate(240deg)', opacity:0}],{duration:1600 + Math.random()*400, easing:'cubic-bezier(.2,.8,.2,1)'});
+    setTimeout(()=>c.remove(),2200);
+  }
+});
+
+// initialize hearts
+makeHearts();
+</script>
+</body>
+</html>
