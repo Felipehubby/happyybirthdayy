@@ -239,6 +239,26 @@ document.getElementById('finalBtn').addEventListener('click', ()=>{
 
 // initialize hearts
 makeHearts();
+<script>
+const paragraphs = document.querySelectorAll(".letter p");
+let index = 0;
+
+function revealNext() {
+  if (index < paragraphs.length) {
+    paragraphs[index].style.opacity = 1;
+    paragraphs[index].style.transform = "translateY(0)";
+    index++;
+    setTimeout(revealNext, 2000); // controla o tempo entre parágrafos
+  }
+}
+
+document.querySelector(".play-btn").addEventListener("click", () => {
+  const audio = document.getElementById("bg-music");
+  audio.play();
+  document.querySelector(".overlay").style.display = "none";
+  revealNext();
+});
 </script>
+
 </body>
 </html>
